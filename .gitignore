@@ -1,0 +1,10 @@
+.vscode
+.venv
+
+*.pyc
+Pipfile.lock
+
+config.yaml
+config.yml
+
+gunicorn.conf.py
