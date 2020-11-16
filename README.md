@@ -6,6 +6,7 @@
 - pipenv
 
 ## Installation
+`mkdir .venv`
 `pipenv install`
 
 ## Run
