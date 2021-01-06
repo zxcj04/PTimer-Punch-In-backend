@@ -1,5 +1,5 @@
 app:
-  prefix: ""
+  prefix: ""  #  '/template'
 
 database:
   host: 

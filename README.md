@@ -6,11 +6,16 @@
 - pipenv
 
 ## Installation
+`setup your .pypirc`
 `mkdir .venv`
 `pipenv install`
 
-## Run
-`pipenv run python -m template`
+## Run ( Check Pipfile )
+- dev
+`pipenv run dev`
+
+- prod test
+`pipenv run prod`
 
 ## How to use 
 - Clone or Fork this project for a new one

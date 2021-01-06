@@ -1,4 +1,4 @@
 import multiprocessing as mp
-bind = "127.0.0.1:<port>"
+bind = "0.0.0.0:5000"
 workers = mp.cpu_count() - 1
-accesslog = "<service>-api.log"
+accesslog = "template-api.log"

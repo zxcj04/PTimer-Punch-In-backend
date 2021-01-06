@@ -1,7 +1,9 @@
-from vdr_route.lib import config
+from template.lib import config
+from .hello import hello_api
 
 # (<url-prefix>, <api-blueprint>)
 WSGI_APIS = [
+    ("/hello", hello_api)
 ]
 
 

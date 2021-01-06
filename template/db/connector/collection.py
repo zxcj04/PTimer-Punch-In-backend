@@ -7,7 +7,12 @@ from .helper import hasUpdateOps
 _LOGGER = logging.getLogger("connector.collection")
 
 MongoResult = namedtuple(
-    "MongoResult", ["matchedCount", "modifiedCount", "documentIds",]
+    "MongoResult",
+    [
+        "matchedCount",
+        "modifiedCount",
+        "documentIds",
+    ],
 )
 
 
@@ -37,7 +42,9 @@ class MongoCollection(object):
     def insert_many(self, mDocuments, ordered=True):
         mRet = self.collection.insert_many(mDocuments, ordered=ordered)
         return MongoResult(
-            matchedCount=None, modifiedCount=None, documentIds=mRet.inserted_ids,
+            matchedCount=None,
+            modifiedCount=None,
+            documentIds=mRet.inserted_ids,
         )
 
     @_assert_connection
@@ -46,7 +53,9 @@ class MongoCollection(object):
         return MongoResult(
             matchedCount=mRet.matched_count,
             modifiedCount=mRet.modified_count,
-            documentIds=[mRet.upserted_id] if upsert and mRet.upserted_id else [],
+            documentIds=[mRet.upserted_id]
+            if upsert and mRet.upserted_id
+            else [],
         )
 
     @_assert_connection
@@ -57,7 +66,9 @@ class MongoCollection(object):
         return MongoResult(
             matchedCount=mRet.matched_count,
             modifiedCount=mRet.modified_count,
-            documentIds=[mRet.upserted_id] if upsert and mRet.upserted_id else [],
+            documentIds=[mRet.upserted_id]
+            if upsert and mRet.upserted_id
+            else [],
         )
 
     @_assert_connection
@@ -68,7 +79,9 @@ class MongoCollection(object):
         return MongoResult(
             matchedCount=mRet.matched_count,
             modifiedCount=mRet.modified_count,
-            documentIds=[mRet.upserted_id] if upsert and mRet.upserted_id else [],
+            documentIds=[mRet.upserted_id]
+            if upsert and mRet.upserted_id
+            else [],
         )
 
     @_assert_connection
@@ -99,7 +112,9 @@ class MongoCollection(object):
         return [v for v in c] if not cursor else c
 
     @_assert_connection
-    def find(self, mFilter, mProject=None, mSort=None, skip=0, limit=0, cursor=False):
+    def find(
+        self, mFilter, mProject=None, mSort=None, skip=0, limit=0, cursor=False
+    ):
         c = self.collection.find(
             mFilter, projection=mProject, sort=mSort, skip=skip, limit=limit
         )
@@ -134,7 +149,9 @@ class MongoCollection(object):
             sort=mSort,
             upsert=upsert,
             return_document=(
-                ReturnDocument.AFTER if returnNewDocument else ReturnDocument.BEFORE
+                ReturnDocument.AFTER
+                if returnNewDocument
+                else ReturnDocument.BEFORE
             ),
         )
 
@@ -157,7 +174,9 @@ class MongoCollection(object):
             sort=mSort,
             upsert=upsert,
             return_document=(
-                ReturnDocument.AFTER if returnNewDocument else ReturnDocument.BEFORE
+                ReturnDocument.AFTER
+                if returnNewDocument
+                else ReturnDocument.BEFORE
             ),
         )
 

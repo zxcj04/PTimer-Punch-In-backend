@@ -11,7 +11,9 @@ def list_wsgi_routes(app):
         routes.append(
             {
                 "url": rule.rule,
-                "methods": ", ".join(set(rule.methods).intersection(basic_methods)),
+                "methods": ", ".join(
+                    set(rule.methods).intersection(basic_methods)
+                ),
                 "function": "%s.%s" % (vf.__module__, vf.__name__),
             }
         )
@@ -21,13 +23,19 @@ def list_wsgi_routes(app):
 def gen_wsgi_report(wsgi_routes):
     # calc report width
     col_wsgi_url_width = max([*[len(x["url"]) for x in wsgi_routes], 16])
-    col_wsgi_methods_width = max([*[len(x["methods"]) for x in wsgi_routes], 6])
-    col_wsgi_function_width = max([*[len(x["function"]) for x in wsgi_routes], 16])
+    col_wsgi_methods_width = max(
+        [*[len(x["methods"]) for x in wsgi_routes], 6]
+    )
+    col_wsgi_function_width = max(
+        [*[len(x["function"]) for x in wsgi_routes], 16]
+    )
 
-    body_tmpl = "| %-{url_width}s | %-{method_width}s | %-{func_width}s |".format(
-        url_width=col_wsgi_url_width,
-        method_width=col_wsgi_methods_width,
-        func_width=col_wsgi_function_width,
+    body_tmpl = (
+        "| %-{url_width}s | %-{method_width}s | %-{func_width}s |".format(
+            url_width=col_wsgi_url_width,
+            method_width=col_wsgi_methods_width,
+            func_width=col_wsgi_function_width,
+        )
     )
     lines = []
     br = (
@@ -45,7 +53,9 @@ def gen_wsgi_report(wsgi_routes):
     lines.append(br)
     # body
     for route in sorted(wsgi_routes, key=itemgetter("url")):
-        lines.append(body_tmpl % (route["url"], route["methods"], route["function"]))
+        lines.append(
+            body_tmpl % (route["url"], route["methods"], route["function"])
+        )
     # footer
     lines.append(br)
     return "\n".join(lines)
