@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "7bbde35cdd9cbd0e6eb08d62117f4b16b16b752ad53a905a35966af77ff1b1d3"
+            "sha256": "e8dfe98bf877a2c8f34bb7894f2c442a73a3f53ae890ac1fadddc2a7c102142b"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -23,8 +23,16 @@
     "default": {
         "aclaaa": {
             "hashes": [
-                "sha256:9ef69d2e951add51288cbdc949c0b94b35a449976adb9c6f75bf8fa78a06a507",
-                "sha256:61600e96c29bc67a1130f11cff8da8becff88a883ba1eb600d74dcdebe674c08"
+                "sha256:61600e96c29bc67a1130f11cff8da8becff88a883ba1eb600d74dcdebe674c08",
+                "sha256:9ef69d2e951add51288cbdc949c0b94b35a449976adb9c6f75bf8fa78a06a507"
+            ],
+            "index": "pypi",
+            "version": "==0.0.1"
+        },
+        "aclmongo": {
+            "hashes": [
+                "sha256:412eea6ee61951c70419a521d7d7fa316399874a2506557f3a35b65f02e024ce",
+                "sha256:631291186738e1a57dba1ce0197cc90e1d82e4d63bf5e5eb857d0116d10dd5ec"
             ],
             "index": "pypi",
             "version": "==0.0.1"
@@ -183,7 +191,6 @@
                 "sha256:fc4946acb6cdada08f60aca103b61334995523da65be5fe816ea8571c9967d46",
                 "sha256:fcc66d17a3363b7bd6d2655de8706e25a3cd1be2bd1b8e8d8a5c504a6ef893ae"
             ],
-            "index": "pypi",
             "version": "==3.11.2"
         },
         "pyyaml": {
