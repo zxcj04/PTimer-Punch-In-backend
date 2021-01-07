@@ -23,11 +23,11 @@
     "default": {
         "aclaaa": {
             "hashes": [
-                "sha256:1fc6727087e505c2d9e7a21cefec6a1ce2aa47058484646dd5d88ec9ea9f7176",
-                "sha256:b024f93b1aa96276f329339c86c9580ef3e0997bed510df4055d1b890bf35335"
+                "sha256:9ef69d2e951add51288cbdc949c0b94b35a449976adb9c6f75bf8fa78a06a507",
+                "sha256:61600e96c29bc67a1130f11cff8da8becff88a883ba1eb600d74dcdebe674c08"
             ],
             "index": "pypi",
-            "version": "==0.0.0"
+            "version": "==0.0.1"
         },
         "click": {
             "hashes": [
@@ -47,11 +47,11 @@
         },
         "flask-cors": {
             "hashes": [
-                "sha256:6bcfc100288c5d1bcb1dbb854babd59beee622ffd321e444b05f24d6d58466b8",
-                "sha256:cee4480aaee421ed029eaa788f4049e3e26d15b5affb6a880dade6bafad38324"
+                "sha256:74efc975af1194fc7891ff5cd85b0f7478be4f7f59fe158102e91abb72bb4438",
+                "sha256:b60839393f3b84a0f3746f6cdca56c1ad7426aa738b70d6c61375857823181de"
             ],
             "index": "pypi",
-            "version": "==3.0.9"
+            "version": "==3.0.10"
         },
         "gunicorn": {
             "hashes": [
