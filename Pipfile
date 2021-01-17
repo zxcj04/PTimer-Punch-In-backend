@@ -19,6 +19,7 @@ pyyaml = "*"
 gunicorn = "*"
 aclaaa = "*"
 aclmongo = "*"
+acloplog = "*"
 
 [requires]
 python_version = "3.8"
@@ -28,6 +29,5 @@ allow_prereleases = true
 
 [scripts]
 format = "black template -l 79"
-
 dev = "flask run"
 prod = "gunicorn -c configurations/gunicorn.conf.py 'template:create_app()'"

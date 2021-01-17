@@ -1,14 +1,17 @@
 import logging
-from flask import Flask
-from template import db
-from template.lib import utils, config, log
-from template.wsgiapi import register_wsgi_api
+
+import acloplog
 from aclaaa import session
+from flask import Flask
 from flask_cors import CORS
+
+from template import db
+from template.lib import config, log, utils
+from template.lib.oplog import sample
+from template.wsgiapi import register_wsgi_api
 
 
 def setup():
-
     conf_dir = "configurations/"
 
     # config
@@ -28,6 +31,11 @@ def setup():
     session_conf = config.CONF.get("session", {})
     session.setup(session_conf)
 
+    ## Oplog
+    acloplog_conf = config.CONF.get("oplog", {})
+    acloplog.setup(acloplog_conf)
+    acloplog.helper.setup_log_account_func(sample)
+
 
 # In flask run. The name is imported, automatically detecting an app (app) or factory (create_app).
 # https://flask.palletsprojects.com/en/1.1.x/cli/?highlight=flask%20run
@@ -37,6 +45,7 @@ def create_app():
     CORS(app)
 
     # Setup
+    print("Setup...")
     setup()
 
     # register api
@@ -45,3 +54,6 @@ def create_app():
     log.LOGGER.info("WSGI summary:\n%s", wsgi_report)
 
     return app
+
+if __name__ == "__main__":
+    print("Templaet")

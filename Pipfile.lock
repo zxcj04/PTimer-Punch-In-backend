@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "e8dfe98bf877a2c8f34bb7894f2c442a73a3f53ae890ac1fadddc2a7c102142b"
+            "sha256": "b9bb735d23e7d326bcc1fe5fb812aa4bb917dd61dd819ce3a0515e1e87436639"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -36,6 +36,14 @@
             ],
             "index": "pypi",
             "version": "==0.0.1"
+        },
+        "acloplog": {
+            "hashes": [
+                "sha256:1eac05e4a9bb520f5013fe09987b7aa679aa0db25923c4556454ea7fc9464c68",
+                "sha256:493a0bf3471262f318a5180b1f4b53da3f457b4dbb00ec2e67ccb42b4bda5c27"
+            ],
+            "index": "pypi",
+            "version": "==0.0.2"
         },
         "click": {
             "hashes": [
