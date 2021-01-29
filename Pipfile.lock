@@ -31,11 +31,11 @@
         },
         "aclmongo": {
             "hashes": [
-                "sha256:11e0e180f48ed9553e0358c2c13048073bd44b0e35ee3cfca8f6aafef183ee76",
-                "sha256:cc0bffd474edaf4d1107c9322a42360238707cd6896bde4b6a6883ef25eb650e"
+                "sha256:3e4608fff9fff592c7cfeded6ff3dc375f0a3ccabb25101305b3b8c499640023",
+                "sha256:a9c3b2aaa803f1d991bb89654eda197fb4a40594e493c59da7cf2d257ac2edea"
             ],
             "index": "pypi",
-            "version": "==0.1.1"
+            "version": "==0.2.0"
         },
         "acloplog": {
             "hashes": [
