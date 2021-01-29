@@ -23,11 +23,11 @@
     "default": {
         "aclaaa": {
             "hashes": [
-                "sha256:1aeb97c5356dff2c311027435b648139dcfc8f72248f658e0b900365df0d709d",
-                "sha256:6ebc5e1221c2cf90fd4734be0b065b4df1f9b22e69921731bb0068b152dd072b"
+                "sha256:4af6d3f76a30dcb623178b6078f08e3725eda0d4d9fdda8ed6f7e82b758d935d",
+                "sha256:51f8126795f8463201381bf92c12a12f6650b1a0c7df6e96203e4dd7c9c4aabc"
             ],
             "index": "pypi",
-            "version": "==0.1.0"
+            "version": "==0.1.3"
         },
         "aclmongo": {
             "hashes": [
