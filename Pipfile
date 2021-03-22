@@ -11,6 +11,7 @@ name = "home"
 [dev-packages]
 black = "*"
 python-dotenv = "*"
+isort = "*"
 
 [packages]
 flask = "*"
@@ -28,6 +29,6 @@ python_version = "3.9"
 allow_prereleases = true
 
 [scripts]
-format = "black template -l 79"
+format = "python ./scripts/format.py"
 dev = "flask run"
 prod = "gunicorn -c configurations/gunicorn.conf.py 'template:create_app()'"

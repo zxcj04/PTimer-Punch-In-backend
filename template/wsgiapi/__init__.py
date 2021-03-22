@@ -1,10 +1,9 @@
 from template.lib import config
+
 from .hello import hello_api
 
 # (<url-prefix>, <api-blueprint>)
-WSGI_APIS = [
-    ("/hello", hello_api)
-]
+WSGI_APIS = [("/hello", hello_api)]
 
 
 def register_wsgi_api(app):
