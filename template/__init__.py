@@ -55,5 +55,6 @@ def create_app():
 
     return app
 
+
 if __name__ == "__main__":
-    print("Templaet")
+    print("Template")
