@@ -34,9 +34,9 @@ def register():
 @check_session_auth(authentication=False, authorization=False)
 def login():
     data = request.get_json()
-    name = data["name"]
+    mail = data["mail"]
     password = data["password"]
-    session_id = auth.login(name, password)
+    session_id = auth.login(mail, password)
     if session_id is None:
         ret = {
             "status": HTTPStatus.UNAUTHORIZED,

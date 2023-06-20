@@ -23,7 +23,7 @@ def register(mail, name, password):
     salt = str(uuid4().hex)
     hashed_password = hash_password(password, salt)
     account = {
-        "id": str(uuid4()),
+        "user_id": str(uuid4()),
         "mail": mail,
         "name": name,
         "hashed_password": hashed_password,
@@ -67,4 +67,4 @@ def get_user_id(session_id):
     _session = session.get()
     account = _session.hgetall(session_id)
     account = {k.decode("utf-8"): v.decode("utf-8") for k, v in account.items()}
-    return account["id"]
+    return account["user_id"]
