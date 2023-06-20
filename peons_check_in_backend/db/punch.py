@@ -1,6 +1,5 @@
 from aclmongo.connector.session import MongoSession
 
-
 COLLECTION_NAME = "punch"
 
 
@@ -20,7 +19,9 @@ def get(punch_id):
 def get_user_active_punch(user_id):
     with MongoSession() as session:
         col = session.getCollection(COLLECTION_NAME)
-        records = col.find({"user_id": user_id}, {"_id": 0}, [("punch_in_time", -1)])
+        records = col.find(
+            {"user_id": user_id}, {"_id": 0}, [("punch_in_time", -1)]
+        )
         records = list(records)
         if len(records) == 0:
             return None
@@ -35,7 +36,12 @@ def get_user_active_punch(user_id):
 def get_user_all_punch(user_id, limit=50):
     with MongoSession() as session:
         col = session.getCollection(COLLECTION_NAME)
-        records = col.find({"user_id": user_id}, {"_id": 0}, [("punch_in_time", -1)], limit=limit)
+        records = col.find(
+            {"user_id": user_id},
+            {"_id": 0},
+            [("punch_in_time", -1)],
+            limit=limit,
+        )
         records = list(records)
         return records
 
@@ -43,7 +49,9 @@ def get_user_all_punch(user_id, limit=50):
 def get_all_punch(limit=50):
     with MongoSession() as session:
         col = session.getCollection(COLLECTION_NAME)
-        records = col.find({}, {"_id": 0}, [("punch_in_time", -1)], limit=limit)
+        records = col.find(
+            {}, {"_id": 0}, [("punch_in_time", -1)], limit=limit
+        )
         records = list(records)
         return records
 
@@ -67,4 +75,7 @@ def update(record_id, new_record):
 def update_punch_out_time(record_id, punch_out_time):
     with MongoSession() as session:
         col = session.getCollection(COLLECTION_NAME)
-        col.update_one({"punch_id": record_id}, {"$set": {"punch_out_time": punch_out_time}})
+        col.update_one(
+            {"punch_id": record_id},
+            {"$set": {"punch_out_time": punch_out_time}},
+        )

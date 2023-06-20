@@ -20,7 +20,10 @@ def register():
         return jsonify({"error": "invalid request"}), HTTPStatus.BAD_REQUEST
 
     if auth.exist(mail):
-        return jsonify({"message": "user already exist"}), HTTPStatus.BAD_REQUEST
+        return (
+            jsonify({"message": "user already exist"}),
+            HTTPStatus.BAD_REQUEST,
+        )
 
     auth.register(mail, name, password)
     ret = {

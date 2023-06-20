@@ -1,5 +1,5 @@
-from uuid import uuid4
 from datetime import datetime
+from uuid import uuid4
 
 from peons_check_in_backend.db import punch
 
@@ -30,11 +30,13 @@ def punch_in(user_id):
 
     punch_id = str(uuid4())
     punch_time = datetime.now()
-    punch.insert({
-        "punch_id": punch_id,
-        "user_id": user_id,
-        "punch_in_time": punch_time,
-    })
+    punch.insert(
+        {
+            "punch_id": punch_id,
+            "user_id": user_id,
+            "punch_in_time": punch_time,
+        }
+    )
     return punch_id, punch_time
 
 

@@ -1,6 +1,6 @@
-from uuid import uuid4
 import hashlib
 from datetime import timedelta
+from uuid import uuid4
 
 from aclaaa import session
 
@@ -12,7 +12,7 @@ def exist(mail):
 
 
 def hash_password(password, salt):
-    target = (password + salt).encode('utf-8')
+    target = (password + salt).encode("utf-8")
     return hashlib.sha512(target).hexdigest()
 
 
@@ -66,5 +66,7 @@ def logout(session_id):
 def get_user_id(session_id):
     _session = session.get()
     account = _session.hgetall(session_id)
-    account = {k.decode("utf-8"): v.decode("utf-8") for k, v in account.items()}
+    account = {
+        k.decode("utf-8"): v.decode("utf-8") for k, v in account.items()
+    }
     return account["user_id"]

@@ -5,12 +5,13 @@ from flask import Blueprint, jsonify, request
 
 from peons_check_in_backend.lib import auth, punch
 
-
 punch_api = Blueprint("punch_api", __name__)
 
 
 @punch_api.route("/in", methods=["POST"])
-@check_session_auth(authentication=True, authorization=True, permissions=["worker"])
+@check_session_auth(
+    authentication=True, authorization=True, permissions=["worker"]
+)
 def punch_in():
     session_id = request.headers.get("SESSION-ID", None)
     user_id = auth.get_user_id(session_id)
@@ -32,7 +33,9 @@ def punch_in():
 
 
 @punch_api.route("/out", methods=["POST"])
-@check_session_auth(authentication=True, authorization=True, permissions=["worker"])
+@check_session_auth(
+    authentication=True, authorization=True, permissions=["worker"]
+)
 def punch_out():
     session_id = request.headers.get("SESSION-ID", None)
     user_id = auth.get_user_id(session_id)
@@ -53,17 +56,16 @@ def punch_out():
 
 
 @punch_api.route("/active", methods=["GET"])
-@check_session_auth(authentication=True, authorization=True, permissions=["worker"])
+@check_session_auth(
+    authentication=True, authorization=True, permissions=["worker"]
+)
 def get_active_punch():
     session_id = request.headers.get("SESSION-ID", None)
     user_id = auth.get_user_id(session_id)
     try:
         record = punch.get_user_active_punch(user_id)
     except punch.PunchError as e:
-        ret = {
-            "status": HTTPStatus.BAD_REQUEST,
-            "msg": str(e)
-        }
+        ret = {"status": HTTPStatus.BAD_REQUEST, "msg": str(e)}
         return jsonify(ret), ret["status"]
     ret = {
         "status": HTTPStatus.OK,
@@ -74,7 +76,9 @@ def get_active_punch():
 
 
 @punch_api.route("/all", methods=["GET"])
-@check_session_auth(authentication=True, authorization=True, permissions=["worker"])
+@check_session_auth(
+    authentication=True, authorization=True, permissions=["worker"]
+)
 def get_all_punch():
     session_id = request.headers.get("SESSION-ID", None)
     user_id = auth.get_user_id(session_id)
@@ -88,7 +92,9 @@ def get_all_punch():
 
 
 @punch_api.route("/admin_all", methods=["GET"])
-@check_session_auth(authentication=True, authorization=True, permissions=["admin"])
+@check_session_auth(
+    authentication=True, authorization=True, permissions=["admin"]
+)
 def admin_get_all_punch():
     records = punch.get_all_punch()
     ret = {

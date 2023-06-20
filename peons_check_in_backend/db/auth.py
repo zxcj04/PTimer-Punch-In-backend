@@ -1,6 +1,5 @@
 from aclmongo.connector.session import MongoSession
 
-
 COLLECTION_NAME = "auth"
 
 
