@@ -1,14 +1,13 @@
 import logging
 
-import acloplog
 from aclaaa import session
 from flask import Flask
 from flask_cors import CORS
 
-from template import db
-from template.lib import config, log, utils
-from template.lib.oplog import sample
-from template.wsgiapi import register_wsgi_api
+from peons_check_in_backend import db
+from peons_check_in_backend.lib import config, log, utils
+from peons_check_in_backend.lib.oplog import sample
+from peons_check_in_backend.wsgiapi import register_wsgi_api
 
 
 def setup():
@@ -31,11 +30,6 @@ def setup():
     session_conf = config.CONF.get("session", {})
     session.setup(session_conf)
 
-    ## Oplog
-    acloplog_conf = config.CONF.get("oplog", {})
-    acloplog.setup(acloplog_conf)
-    acloplog.helper.setup_log_account_func(sample)
-
 
 # In flask run. The name is imported, automatically detecting an app (app) or factory (create_app).
 # https://flask.palletsprojects.com/en/1.1.x/cli/?highlight=flask%20run
@@ -57,4 +51,4 @@ def create_app():
 
 
 if __name__ == "__main__":
-    print("Template")
+    print("peons_check_in_backend")

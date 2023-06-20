@@ -1,4 +1,4 @@
-from template.lib import config
+from peons_check_in_backend.lib import config
 
 from .hello import hello_api
 
