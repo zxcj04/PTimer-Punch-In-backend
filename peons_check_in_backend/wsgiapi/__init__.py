@@ -1,9 +1,11 @@
 from peons_check_in_backend.lib import config
 
-from .hello import hello_api
+from .auth import auth_api
 
 # (<url-prefix>, <api-blueprint>)
-WSGI_APIS = [("/hello", hello_api)]
+WSGI_APIS = [
+    ("/auth", auth_api)
+]
 
 
 def register_wsgi_api(app):
