@@ -7,8 +7,8 @@ from aclaaa import session
 from peons_check_in_backend.db import auth
 
 
-def exist(name):
-    return auth.exist(name)
+def exist(mail):
+    return auth.exist(mail)
 
 
 def hash_password(password, salt):
@@ -16,13 +16,15 @@ def hash_password(password, salt):
     return hashlib.sha512(target).hexdigest()
 
 
-def register(name, password):
+def register(mail, name, password):
     permissions = [
         "api_worker",
     ]
     salt = str(uuid4().hex)
     hashed_password = hash_password(password, salt)
     account = {
+        "id": str(uuid4()),
+        "mail": mail,
         "name": name,
         "hashed_password": hashed_password,
         "salt": salt,
@@ -36,8 +38,8 @@ def create_session_id():
     return str(uuid4())
 
 
-def login(name, password):
-    account = auth.get(name)
+def login(mail, password):
+    account = auth.get(mail)
     password = hash_password(password, account.get("salt", ""))
     if password != account["hashed_password"]:
         return None
@@ -59,3 +61,10 @@ def login(name, password):
 def logout(session_id):
     _session = session.get()
     _session.delete(session_id)
+
+
+def get_user_id(session_id):
+    _session = session.get()
+    account = _session.hgetall(session_id)
+    account = {k.decode("utf-8"): v.decode("utf-8") for k, v in account.items()}
+    return account["id"]

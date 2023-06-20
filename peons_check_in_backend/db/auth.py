@@ -10,17 +10,17 @@ def insert(account):
         col.insert_one(account)
 
 
-def get(name):
+def get(mail):
     with MongoSession() as session:
         col = session.getCollection(COLLECTION_NAME)
-        ret = col.find_one({"name": name}, {"_id": 0})
+        ret = col.find_one({"mail": mail}, {"_id": 0})
         return ret
 
 
-def exist(name):
+def exist(mail):
     with MongoSession() as session:
         col = session.getCollection(COLLECTION_NAME)
-        ret = col.find_one({"name": name}, {"_id": 0})
+        ret = col.find_one({"mail": mail}, {"_id": 0})
         if ret is None:
             return False
         else:

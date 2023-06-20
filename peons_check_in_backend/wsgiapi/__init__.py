@@ -1,10 +1,12 @@
 from peons_check_in_backend.lib import config
 
 from .auth import auth_api
+from .punch import punch_api
 
 # (<url-prefix>, <api-blueprint>)
 WSGI_APIS = [
-    ("/auth", auth_api)
+    ("/auth", auth_api),
+    ("/punch", punch_api),
 ]
 
 

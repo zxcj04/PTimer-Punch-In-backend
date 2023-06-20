@@ -12,13 +12,17 @@ auth_api = Blueprint("auth_api", __name__)
 @check_session_auth(authentication=False, authorization=False)
 def register():
     data = request.get_json()
-    name = data["name"]
-    password = data["password"]
+    mail = data.get("mail", None)
+    name = data.get("name", None)
+    password = data.get("password", None)
 
-    if auth.exist(name):
+    if mail is None or name is None or password is None:
+        return jsonify({"error": "invalid request"}), HTTPStatus.BAD_REQUEST
+
+    if auth.exist(mail):
         return jsonify({"message": "user already exist"}), HTTPStatus.BAD_REQUEST
 
-    auth.register(name, password)
+    auth.register(mail, name, password)
     ret = {
         "status": HTTPStatus.OK,
         "msg": "register",
