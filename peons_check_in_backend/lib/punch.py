@@ -14,9 +14,9 @@ def get_user_active_punch(user_id):
         raise PunchError("No punch")
     record = records[0]
     if record is None:
-        raise PunchError("No punch")
+        return None
     elif record.get("punch_out_time", None) is not None:
-        raise PunchError("No active punch")
+        return None
     return record
 
 

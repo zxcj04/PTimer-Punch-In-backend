@@ -7,6 +7,10 @@ from aclaaa import session
 from peons_check_in_backend.db import auth
 
 
+class AuthError(Exception):
+    pass
+
+
 def exist(mail):
     return auth.exist(mail)
 
@@ -40,6 +44,8 @@ def create_session_id():
 
 def login(mail, password):
     account = auth.get(mail)
+    if account is None:
+        raise AuthError("user not found")
     password = hash_password(password, account.get("salt", ""))
     if password != account["hashed_password"]:
         return None

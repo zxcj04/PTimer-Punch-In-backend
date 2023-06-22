@@ -12,6 +12,9 @@ auth_api = Blueprint("auth_api", __name__)
 @check_session_auth(authentication=False, authorization=False)
 def register():
     data = request.get_json()
+    if data is None:
+        return jsonify({"error": "invalid request"}), HTTPStatus.BAD_REQUEST
+
     mail = data.get("mail", None)
     name = data.get("name", None)
     password = data.get("password", None)
@@ -20,10 +23,11 @@ def register():
         return jsonify({"error": "invalid request"}), HTTPStatus.BAD_REQUEST
 
     if auth.exist(mail):
-        return (
-            jsonify({"message": "user already exist"}),
-            HTTPStatus.BAD_REQUEST,
-        )
+        ret = {
+            "status": HTTPStatus.BAD_REQUEST,
+            "msg": "login failed",
+        }
+        return jsonify(ret), ret["status"]
 
     auth.register(mail, name, password)
     ret = {
@@ -37,9 +41,24 @@ def register():
 @check_session_auth(authentication=False, authorization=False)
 def login():
     data = request.get_json()
-    mail = data["mail"]
-    password = data["password"]
-    session_id = auth.login(mail, password)
+    if data is None:
+        return jsonify({"error": "invalid request"}), HTTPStatus.BAD_REQUEST
+
+    mail = data.get("mail", None)
+    password = data.get("password", None)
+
+    if mail is None or password is None:
+        return jsonify({"error": "invalid request"}), HTTPStatus.BAD_REQUEST
+
+    try:
+        session_id = auth.login(mail, password)
+    except auth.AuthError as e:
+        ret = {
+            "status": HTTPStatus.BAD_REQUEST,
+            "msg": "login failed",
+        }
+        return jsonify(ret), ret["status"]
+
     if session_id is None:
         ret = {
             "status": HTTPStatus.UNAUTHORIZED,
