@@ -9,7 +9,7 @@ user_api = Blueprint("user_api", __name__)
 
 
 @user_api.route("/info", methods=["POST"])
-@check_session_auth(authentication=True, authorization=False)
+@check_session_auth(authentication=True, authorization=True, permissions=["worker"])
 def info():
     session_id = request.headers.get("SESSION-ID", None)
     user_id = auth.get_user_id(session_id)

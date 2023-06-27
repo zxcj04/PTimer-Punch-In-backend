@@ -74,7 +74,7 @@ def login():
 
 
 @auth_api.route("/check_session", methods=["POST"])
-@check_session_auth(authentication=True, authorization=False)
+@check_session_auth(authentication=True, authorization=True, permissions=["worker"])
 def check_session():
     ret = {
         "status": HTTPStatus.OK,
@@ -84,7 +84,7 @@ def check_session():
 
 
 @auth_api.route("/logout", methods=["POST"])
-@check_session_auth(authentication=True, authorization=False)
+@check_session_auth(authentication=True, authorization=True, permissions=["worker"])
 def logout():
     session_id = request.headers.get("SESSION-ID")
     auth.logout(session_id)

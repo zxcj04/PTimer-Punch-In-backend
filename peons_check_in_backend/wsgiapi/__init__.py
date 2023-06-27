@@ -3,12 +3,14 @@ from peons_check_in_backend.lib import config
 from .auth import auth_api
 from .punch import punch_api
 from .user import user_api
+from .project import project_api
 
 # (<url-prefix>, <api-blueprint>)
 WSGI_APIS = [
     ("/auth", auth_api),
     ("/punch", punch_api),
     ("/user", user_api),
+    ("/project", project_api),
 ]
 
 

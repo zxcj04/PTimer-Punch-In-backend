@@ -4,6 +4,7 @@ from uuid import uuid4
 
 from aclaaa import session
 
+from peons_check_in_backend.lib import user
 from peons_check_in_backend.db import auth
 
 
@@ -26,8 +27,9 @@ def register(mail, name, password):
     ]
     salt = str(uuid4().hex)
     hashed_password = hash_password(password, salt)
+    user_id = str(uuid4())
     account = {
-        "user_id": str(uuid4()),
+        "user_id": user_id,
         "mail": mail,
         "name": name,
         "hashed_password": hashed_password,
@@ -36,6 +38,9 @@ def register(mail, name, password):
     for permission in permissions:
         account[permission] = 1
     auth.insert(account)
+
+    new_user = user.User(user_id, name, mail)
+    user.create_user(new_user)
 
 
 def create_session_id():
