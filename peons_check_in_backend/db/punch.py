@@ -16,30 +16,31 @@ def get(punch_id):
         return ret
 
 
-def get_user_active_punch(user_id):
+def get_user_punch_list(user_id, start=None, end=None, limit=50):
     with MongoSession() as session:
         col = session.getCollection(COLLECTION_NAME)
+        findFilter = {
+            "user_id": user_id,
+        }
+        if start and end:
+            findFilter["$or"] = [
+                {
+                    "punch_in_time": {
+                        "$gte": start,
+                        "$lte": end,
+                    }
+                },
+                {
+                    "punch_out_time": {
+                        "$gte": start,
+                        "$lte": end,
+                    }
+                },
+            ]
         records = col.find(
-            {"user_id": user_id}, {"_id": 0}, [("punch_in_time", -1)]
-        )
-        records = list(records)
-        if len(records) == 0:
-            return None
-        record = records[0]
-        if record is None:
-            return None
-        elif record.get("punch_out_time", None) is not None:
-            return None
-        return record
-
-
-def get_user_all_punch(user_id, limit=50):
-    with MongoSession() as session:
-        col = session.getCollection(COLLECTION_NAME)
-        records = col.find(
-            {"user_id": user_id},
+            findFilter,
             {"_id": 0},
-            [("punch_in_time", -1)],
+            [("record_time", -1)],
             limit=limit,
         )
         records = list(records)
@@ -50,7 +51,7 @@ def get_all_punch(limit=50):
     with MongoSession() as session:
         col = session.getCollection(COLLECTION_NAME)
         records = col.find(
-            {}, {"_id": 0}, [("punch_in_time", -1)], limit=limit
+            {}, {"_id": 0}, [("record_time", -1)], limit=limit
         )
         records = list(records)
         return records
@@ -69,13 +70,27 @@ def exist(punch_id):
 def update(record_id, new_record):
     with MongoSession() as session:
         col = session.getCollection(COLLECTION_NAME)
-        col.update_one({"punch_id": record_id}, {"$set": new_record})
+        col.update_one({"punch_id": record_id, "is_delete": {"$ne": True}}, {"$set": new_record})
 
 
 def update_punch_out_time(record_id, punch_out_time):
     with MongoSession() as session:
         col = session.getCollection(COLLECTION_NAME)
         col.update_one(
-            {"punch_id": record_id},
+            {"punch_id": record_id, "is_delete": {"$ne": True}},
             {"$set": {"punch_out_time": punch_out_time}},
         )
+
+
+def virtual_delete(punch_id):
+    with MongoSession() as session:
+        col = session.getCollection(COLLECTION_NAME)
+        col.update_one(
+            {"punch_id": punch_id}, {"$set": {"is_delete": True}}
+        )
+
+
+def delete(punch_id):
+    with MongoSession() as session:
+        col = session.getCollection(COLLECTION_NAME)
+        col.delete_one({"punch_id": punch_id})
