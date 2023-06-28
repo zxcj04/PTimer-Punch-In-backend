@@ -83,6 +83,16 @@ def check_session():
     return jsonify(ret), ret["status"]
 
 
+@auth_api.route("/check_admin", methods=["POST"])
+@check_session_auth(authentication=True, authorization=True, permissions=["admin"])
+def check_admin():
+    ret = {
+        "status": HTTPStatus.OK,
+        "msg": "admin is valid",
+    }
+    return jsonify(ret), ret["status"]
+
+
 @auth_api.route("/logout", methods=["POST"])
 @check_session_auth(authentication=True, authorization=True, permissions=["worker"])
 def logout():

@@ -152,8 +152,6 @@ def update_punch():
 )
 def delete_punch():
     data = request.get_json()
-    session_id = request.headers.get("SESSION-ID", None)
-    user_id = auth.get_user_id(session_id)
     punch_id = data.get("punch_id", None)
     if punch_id is None:
         ret = {
@@ -176,12 +174,42 @@ def delete_punch():
     return jsonify(ret), ret["status"]
 
 
+@punch_api.route("/admin/recover", methods=["POST"])
+@check_session_auth(
+    authentication=True, authorization=True, permissions=["admin"]
+)
+def admin_recover_punch():
+    data = request.get_json()
+    punch_id = data.get("punch_id", None)
+    if punch_id is None:
+        ret = {
+            "status": HTTPStatus.BAD_REQUEST,
+            "msg": "missing key: punch_id",
+        }
+        return jsonify(ret), ret["status"]
+    try:
+        punch.recover_punch(punch_id)
+    except punch.PunchError as e:
+        ret = {
+            "status": HTTPStatus.BAD_REQUEST,
+            "msg": str(e),
+        }
+        return jsonify(ret), ret["status"]
+    ret = {
+        "status": HTTPStatus.OK,
+        "msg": "recover punch success",
+    }
+    return jsonify(ret), ret["status"]
+
+
 @punch_api.route("/admin/list", methods=["GET"])
 @check_session_auth(
     authentication=True, authorization=True, permissions=["admin"]
 )
 def admin_get_all_punch():
-    records = punch.get_all_punch()
+    start = request.args.get("start", None)
+    end = request.args.get("end", None)
+    records = punch.get_all_punch(start, end)
     ret = {
         "status": HTTPStatus.OK,
         "msg": "admin get all punch success",

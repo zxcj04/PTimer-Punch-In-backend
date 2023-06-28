@@ -2,7 +2,7 @@ from datetime import datetime, timezone
 from uuid import uuid4
 
 from peons_check_in_backend.db import punch
-from peons_check_in_backend.lib import project
+from peons_check_in_backend.lib import project, user
 
 
 class PunchError(Exception):
@@ -52,10 +52,7 @@ def punch_out(user_id):
     return punch_time
 
 
-def get_user_punch_list(user_id, start=None, end=None):
-    start = datetime.strptime(start, r"%Y-%m-%dT%H:%M:%S.%fZ") if start else None
-    end = datetime.strptime(end, r"%Y-%m-%dT%H:%M:%S.%fZ") if end else None
-    records = punch.get_user_punch_list(user_id, start, end)
+def calc_working_hour(records, start=None, end=None):
     for record in records:
         if "project_id" in record:
             record["project_name"] = project.get_project(record["project_id"]).get("project_name", "")
@@ -68,16 +65,29 @@ def get_user_punch_list(user_id, start=None, end=None):
                 punch_out_time = end
             record["working_timer"] = punch_out_time - punch_in_time
             record["working_timer"] = int(record["working_timer"].total_seconds())
-    if len(records) == 0:
-        return []
-    if not start and not end:
-        records[0]["editable"] = True
-    records = [record for record in records if record.get("is_delete", False) is False]
     return records
 
 
-def get_all_punch():
-    records = punch.get_all_punch()
+def get_user_punch_list(user_id, start=None, end=None):
+    start = datetime.strptime(start, r"%Y-%m-%dT%H:%M:%S.%fZ") if start else None
+    end = datetime.strptime(end, r"%Y-%m-%dT%H:%M:%S.%fZ") if end else None
+    records = punch.get_user_punch_list(user_id, start, end)
+    if not start and not end:
+        records[0]["editable"] = True
+    records = [record for record in records if record.get("is_delete", False) is False]
+    records = calc_working_hour(records, start, end)
+    if len(records) == 0:
+        return []
+    return records
+
+
+def get_all_punch(start=None, end=None):
+    start = datetime.strptime(start, r"%Y-%m-%dT%H:%M:%S.%fZ") if start else None
+    end = datetime.strptime(end, r"%Y-%m-%dT%H:%M:%S.%fZ") if end else None
+    records = punch.get_all_punch(start, end)
+    records = calc_working_hour(records, start, end)
+    for record in records:
+        record["user_name"] = user.get_user_name(record["user_id"])
     return records
 
 
@@ -90,6 +100,10 @@ def update_punch(punch_id, new_record):
     if new_record.get("project_id", None):
         new_punch["project_id"] = new_record.get("project_id", None)
     punch.update(punch_id, new_punch)
+
+
+def recover_punch(punch_id):
+    punch.recover(punch_id)
 
 
 def delete_punch(punch_id):

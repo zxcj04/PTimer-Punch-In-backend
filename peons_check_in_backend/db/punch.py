@@ -47,11 +47,27 @@ def get_user_punch_list(user_id, start=None, end=None, limit=50):
         return records
 
 
-def get_all_punch(limit=50):
+def get_all_punch(start=None, end=None, limit=50):
     with MongoSession() as session:
         col = session.getCollection(COLLECTION_NAME)
+        findFilter = {}
+        if start and end:
+            findFilter["$or"] = [
+                {
+                    "punch_in_time": {
+                        "$gte": start,
+                        "$lte": end,
+                    }
+                },
+                {
+                    "punch_out_time": {
+                        "$gte": start,
+                        "$lte": end,
+                    }
+                },
+            ]
         records = col.find(
-            {}, {"_id": 0}, [("record_time", -1)], limit=limit
+            findFilter, {"_id": 0}, [("record_time", -1)], limit=limit
         )
         records = list(records)
         return records
@@ -79,6 +95,14 @@ def update_punch_out_time(record_id, punch_out_time):
         col.update_one(
             {"punch_id": record_id, "is_delete": {"$ne": True}},
             {"$set": {"punch_out_time": punch_out_time}},
+        )
+
+
+def recover(record_id):
+    with MongoSession() as session:
+        col = session.getCollection(COLLECTION_NAME)
+        col.update_one(
+            {"punch_id": record_id}, {"$unset": {"is_delete": ""}}
         )
 
 
