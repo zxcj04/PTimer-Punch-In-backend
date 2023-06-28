@@ -21,7 +21,7 @@ def hash_password(password, salt):
     return hashlib.sha512(target).hexdigest()
 
 
-def register(mail, name, password):
+def register(mail, password, info: dict):
     permissions = [
         "api_worker",
     ]
@@ -31,7 +31,6 @@ def register(mail, name, password):
     account = {
         "user_id": user_id,
         "mail": mail,
-        "name": name,
         "hashed_password": hashed_password,
         "salt": salt,
     }
@@ -39,8 +38,14 @@ def register(mail, name, password):
         account[permission] = 1
     auth.insert(account)
 
-    new_user = user.User(user_id, name, mail)
-    user.create_user(new_user)
+    info["mail"] = mail
+
+    try:
+        new_user = user.User(user_id, info)
+        user.create_user(new_user)
+    except user.UserError as e:
+        auth.delete(mail)
+        raise AuthError(e)
 
 
 def create_session_id():
@@ -51,6 +56,9 @@ def login(mail, password):
     account = auth.get(mail)
     if account is None:
         raise AuthError("user not found")
+    user_id = account["user_id"]
+    if not user.is_user_active(user_id):
+        raise AuthError("user not active")
     password = hash_password(password, account.get("salt", ""))
     if password != account["hashed_password"]:
         return None
@@ -81,3 +89,15 @@ def get_user_id(session_id):
         k.decode("utf-8"): v.decode("utf-8") for k, v in account.items()
     }
     return account["user_id"]
+
+
+def change_password(session_id, old_password, new_password):
+    user_id = get_user_id(session_id)
+    account = auth.get_by_user_id(user_id)
+    if account is None:
+        raise AuthError("user not found")
+    password = hash_password(old_password, account.get("salt", ""))
+    if password != account["hashed_password"]:
+        raise AuthError("wrong password")
+    new_password = hash_password(new_password, account.get("salt", ""))
+    auth.update_password(account["mail"], new_password)

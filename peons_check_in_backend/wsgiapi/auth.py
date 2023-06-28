@@ -11,15 +11,15 @@ auth_api = Blueprint("auth_api", __name__)
 @auth_api.route("/register", methods=["POST"])
 @check_session_auth(authentication=False, authorization=False)
 def register():
-    data = request.get_json()
+    data: dict = request.get_json()
     if data is None:
         return jsonify({"error": "invalid request"}), HTTPStatus.BAD_REQUEST
 
     mail = data.get("mail", None)
-    name = data.get("name", None)
     password = data.get("password", None)
+    info = data.get("info", None)
 
-    if mail is None or name is None or password is None:
+    if mail is None or password is None or info is None:
         return jsonify({"error": "invalid request"}), HTTPStatus.BAD_REQUEST
 
     if auth.exist(mail):
@@ -29,7 +29,15 @@ def register():
         }
         return jsonify(ret), ret["status"]
 
-    auth.register(mail, name, password)
+    try:
+        auth.register(mail, password, info)
+    except auth.AuthError as e:
+        ret = {
+            "status": HTTPStatus.BAD_REQUEST,
+            "msg": str(e),
+        }
+        return jsonify(ret), ret["status"]
+
     ret = {
         "status": HTTPStatus.OK,
         "msg": "register",
@@ -101,5 +109,35 @@ def logout():
     ret = {
         "status": HTTPStatus.OK,
         "msg": "logout",
+    }
+    return jsonify(ret), ret["status"]
+
+
+@auth_api.route("/change_password", methods=["POST"])
+@check_session_auth(authentication=True, authorization=False)
+def change_password():
+    session_id = request.headers.get("SESSION-ID")
+    data = request.get_json()
+    if data is None:
+        return jsonify({"error": "invalid request"}), HTTPStatus.BAD_REQUEST
+
+    old_password = data.get("old_password", None)
+    new_password = data.get("new_password", None)
+
+    if old_password is None or new_password is None:
+        return jsonify({"error": "invalid request"}), HTTPStatus.BAD_REQUEST
+
+    try:
+        auth.change_password(session_id, old_password, new_password)
+    except auth.AuthError as e:
+        ret = {
+            "status": HTTPStatus.BAD_REQUEST,
+            "msg": str(e),
+        }
+        return jsonify(ret), ret["status"]
+
+    ret = {
+        "status": HTTPStatus.OK,
+        "msg": "change password success",
     }
     return jsonify(ret), ret["status"]

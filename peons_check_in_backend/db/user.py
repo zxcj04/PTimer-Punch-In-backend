@@ -26,10 +26,10 @@ def exist(user_id):
             return True
 
 
-def update(user, new_user):
+def update(user_id, new_user):
     with MongoSession() as session:
         col = session.getCollection(COLLECTION_NAME)
-        col.update_one(user, {"$set": new_user})
+        col.update_one({"user_id": user_id}, {"$set": new_user})
 
 
 def delete(user_id):

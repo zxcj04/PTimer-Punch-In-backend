@@ -72,12 +72,12 @@ def get_user_punch_list(user_id, start=None, end=None):
     start = datetime.strptime(start, r"%Y-%m-%dT%H:%M:%S.%fZ") if start else None
     end = datetime.strptime(end, r"%Y-%m-%dT%H:%M:%S.%fZ") if end else None
     records = punch.get_user_punch_list(user_id, start, end)
+    if len(records) == 0:
+        return []
     if not start and not end:
         records[0]["editable"] = True
     records = [record for record in records if record.get("is_delete", False) is False]
     records = calc_working_hour(records, start, end)
-    if len(records) == 0:
-        return []
     return records
 
 
