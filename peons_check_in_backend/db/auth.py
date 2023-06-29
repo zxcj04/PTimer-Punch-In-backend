@@ -33,6 +33,15 @@ def exist(mail):
             return True
 
 
+def update_permission(user_id, permission, active: bool):
+    with MongoSession() as session:
+        col = session.getCollection(COLLECTION_NAME)
+        if active:
+            col.update_one({"user_id": user_id}, {"$set": {permission: True}})
+        else:
+            col.update_one({"user_id": user_id}, {"$unset": {permission: ""}})
+
+
 def update(account, new_account):
     with MongoSession() as session:
         col = session.getCollection(COLLECTION_NAME)

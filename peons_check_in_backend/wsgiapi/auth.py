@@ -141,3 +141,59 @@ def change_password():
         "msg": "change password success",
     }
     return jsonify(ret), ret["status"]
+
+
+@auth_api.route("/administer", methods=["POST"])
+@check_session_auth(authentication=True, authorization=True, permissions=["admin"])
+def administer():
+    data = request.get_json()
+    if data is None:
+        return jsonify({"error": "invalid request"}), HTTPStatus.BAD_REQUEST
+
+    user_id = data.get("user_id", None)
+
+    if user_id is None:
+        return jsonify({"error": "invalid request"}), HTTPStatus.BAD_REQUEST
+
+    try:
+        auth.administer(user_id)
+    except auth.AuthError as e:
+        ret = {
+            "status": HTTPStatus.BAD_REQUEST,
+            "msg": str(e),
+        }
+        return jsonify(ret), ret["status"]
+
+    ret = {
+        "status": HTTPStatus.OK,
+        "msg": "administer",
+    }
+    return jsonify(ret), ret["status"]
+
+
+@auth_api.route("/revoke_admin", methods=["POST"])
+@check_session_auth(authentication=True, authorization=True, permissions=["admin"])
+def revoke_admin():
+    data = request.get_json()
+    if data is None:
+        return jsonify({"error": "invalid request"}), HTTPStatus.BAD_REQUEST
+
+    user_id = data.get("user_id", None)
+
+    if user_id is None:
+        return jsonify({"error": "invalid request"}), HTTPStatus.BAD_REQUEST
+
+    try:
+        auth.revoke_admin(user_id)
+    except auth.AuthError as e:
+        ret = {
+            "status": HTTPStatus.BAD_REQUEST,
+            "msg": str(e),
+        }
+        return jsonify(ret), ret["status"]
+
+    ret = {
+        "status": HTTPStatus.OK,
+        "msg": "administer",
+    }
+    return jsonify(ret), ret["status"]

@@ -87,6 +87,8 @@ def get_all_punch(start=None, end=None):
     records = punch.get_all_punch(start, end)
     records = calc_working_hour(records, start, end)
     for record in records:
+        if "user_id" not in record:
+            continue
         record["user_name"] = user.get_user_name(record["user_id"])
     return records
 
@@ -107,4 +109,7 @@ def recover_punch(punch_id):
 
 
 def delete_punch(punch_id):
+    is_exist = punch.exist(punch_id)
+    if not is_exist:
+        raise PunchError("Punch not exist")
     punch.virtual_delete(punch_id)

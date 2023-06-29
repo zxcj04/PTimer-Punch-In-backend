@@ -16,6 +16,13 @@ def get(user_id):
         return ret
 
 
+def get_all():
+    with MongoSession() as session:
+        col = session.getCollection(COLLECTION_NAME)
+        ret = col.find({}, {"_id": 0})
+        return list(ret)
+
+
 def exist(user_id):
     with MongoSession() as session:
         col = session.getCollection(COLLECTION_NAME)

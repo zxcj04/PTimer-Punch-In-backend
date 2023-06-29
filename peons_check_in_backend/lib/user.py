@@ -1,5 +1,5 @@
 from peons_check_in_backend.db import user
-from peons_check_in_backend.lib import project
+from peons_check_in_backend.lib import project, auth
 
 
 class UserError(Exception):
@@ -40,6 +40,11 @@ class User:
         return ["name", "mail", "telephone", "telegram"]
 
 
+    @staticmethod
+    def available_infos_admin():
+        return ["name", "mail", "telephone", "telegram", "active", "projects"]
+
+
 def get_user(user_id):
     return user.get(user_id)
 
@@ -66,16 +71,17 @@ def inactivate_user(user_id):
     target_user = user.get(user_id)
     if target_user is None:
         raise UserError("User not found")
-    target_user["active"] = False
-    user.update(target_user)
+    is_admin = auth.is_admin(user_id)
+    if is_admin:
+        raise UserError("Cannot inactivate admin")
+    user.update(user_id, {"active": False})
 
 
 def activate_user(user_id):
     target_user = user.get(user_id)
     if target_user is None:
         raise UserError("User not found")
-    target_user["active"] = True
-    user.update(target_user)
+    user.update(user_id, {"active": True})
 
 
 def get_user_projects(user_id):
@@ -107,12 +113,21 @@ def remove_user_project(user_id, project_id):
         user.update(target_user)
 
 
-def update_user(user_id, info: dict):
+def update_user(user_id, info: dict, is_admin=False):
     target_user = user.get(user_id)
     if target_user is None:
         raise UserError("User not found")
     for k in info.keys():
-        if k not in User.available_infos():
+        if not is_admin and k not in User.available_infos():
             raise UserError("Invalid info")
+        elif is_admin and k not in User.available_infos_admin():
+            continue
         target_user[k] = info[k]
     user.update(user_id, target_user)
+
+
+def get_all_users():
+    users = user.get_all()
+    for u in users:
+        u["is_admin"] = auth.is_admin(u["user_id"])
+    return users

@@ -101,3 +101,18 @@ def change_password(session_id, old_password, new_password):
         raise AuthError("wrong password")
     new_password = hash_password(new_password, account.get("salt", ""))
     auth.update_password(account["mail"], new_password)
+
+
+def is_admin(user_id):
+    account = auth.get_by_user_id(user_id)
+    if account is None:
+        raise AuthError("user not found")
+    return True if account.get("api_admin", False) == 1 else False
+
+
+def administer(user_id):
+    auth.update_permission(user_id, "api_admin", True)
+
+
+def revoke_admin(user_id):
+    auth.update_permission(user_id, "api_admin", False)
