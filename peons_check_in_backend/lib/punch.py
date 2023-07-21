@@ -93,6 +93,36 @@ def get_all_punch(user_id=None, start=None, end=None):
     return records
 
 
+def create_punch(new_record):
+    user_id = new_record.get("user_id", None)
+    try:
+        is_last_punch_active = get_user_active_punch(user_id) is not None
+    except PunchError as e:
+        is_last_punch_active = False
+    if is_last_punch_active:
+        raise PunchError("Last punch is active")
+
+    punch_id = str(uuid4())
+    record_time = datetime.now(timezone.utc)
+    punch_in_time = datetime.strptime(new_record.get("punch_in_time", None), r"%Y-%m-%dT%H:%M:%S.%fZ")
+    punch_out_time = datetime.strptime(new_record.get("punch_out_time", None), r"%Y-%m-%dT%H:%M:%S.%fZ")
+    project_id = new_record.get("project_id", None)
+
+    if punch_in_time > punch_out_time:
+        raise PunchError("Punch in time should not be later than punch out time")
+
+    new_punch = {
+        "punch_id": punch_id,
+        "user_id": user_id,
+        "punch_in_time": punch_in_time,
+        "punch_out_time": punch_out_time,
+        "record_time": record_time,
+        "project_id": project_id,
+    }
+    punch.insert(new_punch)
+    return punch_id
+
+
 def update_punch(punch_id, new_record):
     new_punch = {}
     if new_record.get("punch_in_time", None):

@@ -177,6 +177,41 @@ def delete_punch():
     return jsonify(ret), ret["status"]
 
 
+@punch_api.route("/admin/create", methods=["POST"])
+@check_session_auth(
+    authentication=True, authorization=True, permissions=["admin"]
+)
+def admin_create_punch():
+    data = request.get_json()
+    try:
+        new_punch = {
+            "user_id": data["user_id"],
+            "punch_in_time": data["punch_in_time"],
+            "punch_out_time": data["punch_out_time"],
+            "project_id": data["project_id"],
+        }
+    except KeyError as e:
+        ret = {
+            "status": HTTPStatus.BAD_REQUEST,
+            "msg": f"missing key: {e}",
+        }
+        return jsonify(ret), ret["status"]
+
+    try:
+        punch.create_punch(new_punch)
+    except punch.PunchError as e:
+        ret = {
+            "status": HTTPStatus.BAD_REQUEST,
+            "msg": str(e),
+        }
+        return jsonify(ret), ret["status"]
+    ret = {
+        "status": HTTPStatus.OK,
+        "msg": "create punch success",
+    }
+    return jsonify(ret), ret["status"]
+
+
 @punch_api.route("/admin/recover", methods=["POST"])
 @check_session_auth(
     authentication=True, authorization=True, permissions=["admin"]
