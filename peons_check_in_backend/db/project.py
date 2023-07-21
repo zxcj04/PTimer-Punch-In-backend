@@ -33,10 +33,24 @@ def exist(project_id):
             return True
 
 
-def update(project, new_project):
+def update(project_id, new_project):
     with MongoSession() as session:
         col = session.getCollection(COLLECTION_NAME)
-        col.update_one(project, {"$set": new_project})
+        col.update_one({"project_id": project_id}, {"$set": new_project})
+
+
+def recover(project_id):
+    with MongoSession() as session:
+        col = session.getCollection(COLLECTION_NAME)
+        col.update_one(
+            {"project_id": project_id}, {"$unset": {"is_delete": ""}}
+        )
+
+
+def virtual_delete(project_id):
+    with MongoSession() as session:
+        col = session.getCollection(COLLECTION_NAME)
+        col.update_one({"project_id": project_id}, {"$set": {"is_delete": True}})
 
 
 def delete(project_id):

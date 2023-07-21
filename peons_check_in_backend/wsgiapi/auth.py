@@ -25,12 +25,12 @@ def register():
     if auth.exist(mail):
         ret = {
             "status": HTTPStatus.BAD_REQUEST,
-            "msg": "login failed",
+            "msg": "mail already exist",
         }
         return jsonify(ret), ret["status"]
 
     try:
-        auth.register(mail, password, info)
+        user_id = auth.register(mail, password, info)
     except auth.AuthError as e:
         ret = {
             "status": HTTPStatus.BAD_REQUEST,
@@ -41,6 +41,7 @@ def register():
     ret = {
         "status": HTTPStatus.OK,
         "msg": "register",
+        "user_id": user_id,
     }
     return jsonify(ret), ret["status"]
 
@@ -60,6 +61,12 @@ def login():
 
     try:
         session_id = auth.login(mail, password)
+    except auth.AuthNotActiveError as e:
+        ret = {
+            "status": HTTPStatus.UNAUTHORIZED,
+            "msg": "User not active",
+        }
+        return jsonify(ret), ret["status"]
     except auth.AuthError as e:
         ret = {
             "status": HTTPStatus.BAD_REQUEST,
@@ -69,7 +76,7 @@ def login():
 
     if session_id is None:
         ret = {
-            "status": HTTPStatus.UNAUTHORIZED,
+            "status": HTTPStatus.BAD_REQUEST,
             "msg": "login failed",
         }
     else:

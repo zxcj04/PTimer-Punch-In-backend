@@ -12,6 +12,10 @@ class AuthError(Exception):
     pass
 
 
+class AuthNotActiveError(AuthError):
+    pass
+
+
 def exist(mail):
     return auth.exist(mail)
 
@@ -47,6 +51,8 @@ def register(mail, password, info: dict):
         auth.delete(mail)
         raise AuthError(e)
 
+    return user_id
+
 
 def create_session_id():
     return str(uuid4())
@@ -58,7 +64,7 @@ def login(mail, password):
         raise AuthError("user not found")
     user_id = account["user_id"]
     if not user.is_user_active(user_id):
-        raise AuthError("user not active")
+        raise AuthNotActiveError("user not active")
     password = hash_password(password, account.get("salt", ""))
     if password != account["hashed_password"]:
         return None

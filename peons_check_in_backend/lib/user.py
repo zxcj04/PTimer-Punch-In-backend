@@ -37,12 +37,12 @@ class User:
 
     @staticmethod
     def available_infos():
-        return ["name", "mail", "telephone", "telegram"]
+        return ["name", "telephone", "telegram"]
 
 
     @staticmethod
     def available_infos_admin():
-        return ["name", "mail", "telephone", "telegram", "active", "projects"]
+        return ["name", "telephone", "telegram", "active", "projects"]
 
 
 def get_user(user_id):
@@ -119,7 +119,7 @@ def update_user(user_id, info: dict, is_admin=False):
         raise UserError("User not found")
     for k in info.keys():
         if not is_admin and k not in User.available_infos():
-            raise UserError("Invalid info")
+            continue
         elif is_admin and k not in User.available_infos_admin():
             continue
         target_user[k] = info[k]

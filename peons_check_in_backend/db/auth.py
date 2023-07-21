@@ -37,7 +37,7 @@ def update_permission(user_id, permission, active: bool):
     with MongoSession() as session:
         col = session.getCollection(COLLECTION_NAME)
         if active:
-            col.update_one({"user_id": user_id}, {"$set": {permission: True}})
+            col.update_one({"user_id": user_id}, {"$set": {permission: 1}})
         else:
             col.update_one({"user_id": user_id}, {"$unset": {permission: ""}})
 

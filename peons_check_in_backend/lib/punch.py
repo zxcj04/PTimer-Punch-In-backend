@@ -81,10 +81,10 @@ def get_user_punch_list(user_id, start=None, end=None):
     return records
 
 
-def get_all_punch(start=None, end=None):
+def get_all_punch(user_id=None, start=None, end=None):
     start = datetime.strptime(start, r"%Y-%m-%dT%H:%M:%S.%fZ") if start else None
     end = datetime.strptime(end, r"%Y-%m-%dT%H:%M:%S.%fZ") if end else None
-    records = punch.get_all_punch(start, end)
+    records = punch.get_all_punch(user_id, start, end)
     records = calc_working_hour(records, start, end)
     for record in records:
         if "user_id" not in record:

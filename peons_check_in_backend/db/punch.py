@@ -16,7 +16,7 @@ def get(punch_id):
         return ret
 
 
-def get_user_punch_list(user_id, start=None, end=None, limit=50):
+def get_user_punch_list(user_id, start=None, end=None, limit=0):
     with MongoSession() as session:
         col = session.getCollection(COLLECTION_NAME)
         findFilter = {
@@ -47,10 +47,12 @@ def get_user_punch_list(user_id, start=None, end=None, limit=50):
         return records
 
 
-def get_all_punch(start=None, end=None, limit=50):
+def get_all_punch(user_id=None, start=None, end=None, limit=0):
     with MongoSession() as session:
         col = session.getCollection(COLLECTION_NAME)
         findFilter = {}
+        if user_id:
+            findFilter["user_id"] = user_id
         if start and end:
             findFilter["$or"] = [
                 {

@@ -1,4 +1,5 @@
 from http import HTTPStatus
+import gc
 
 from aclaaa.decorator import check_session_auth
 from flask import Blueprint, jsonify, request
@@ -88,6 +89,7 @@ def get_active_punch():
         "msg": "get active punch success",
         "punch": record,
     }
+    gc.collect()
     return jsonify(ret), ret["status"]
 
 
@@ -106,6 +108,7 @@ def get_all_punch():
         "msg": "get all punch success",
         "punches": records,
     }
+    gc.collect()
     return jsonify(ret), ret["status"]
 
 
@@ -207,9 +210,10 @@ def admin_recover_punch():
     authentication=True, authorization=True, permissions=["admin"]
 )
 def admin_get_all_punch():
+    user_id = request.args.get("user_id", None)
     start = request.args.get("start", None)
     end = request.args.get("end", None)
-    records = punch.get_all_punch(start, end)
+    records = punch.get_all_punch(user_id, start, end)
     ret = {
         "status": HTTPStatus.OK,
         "msg": "admin get all punch success",
