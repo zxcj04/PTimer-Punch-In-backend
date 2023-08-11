@@ -1,10 +1,10 @@
-from http import HTTPStatus
 import gc
+from http import HTTPStatus
 
 from aclaaa.decorator import check_session_auth
 from flask import Blueprint, jsonify, request
 
-from peons_check_in_backend.lib import auth, punch, project
+from peons_check_in_backend.lib import auth, project, punch
 
 punch_api = Blueprint("punch_api", __name__)
 

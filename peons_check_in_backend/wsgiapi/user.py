@@ -9,7 +9,9 @@ user_api = Blueprint("user_api", __name__)
 
 
 @user_api.route("/info", methods=["GET"])
-@check_session_auth(authentication=True, authorization=True, permissions=["worker"])
+@check_session_auth(
+    authentication=True, authorization=True, permissions=["worker"]
+)
 def info():
     session_id = request.headers.get("SESSION-ID", None)
     user_id = auth.get_user_id(session_id)
@@ -23,7 +25,9 @@ def info():
 
 
 @user_api.route("/projects", methods=["GET"])
-@check_session_auth(authentication=True, authorization=True, permissions=["worker"])
+@check_session_auth(
+    authentication=True, authorization=True, permissions=["worker"]
+)
 def projects():
     session_id = request.headers.get("SESSION-ID", None)
     user_id = auth.get_user_id(session_id)
@@ -37,7 +41,9 @@ def projects():
 
 
 @user_api.route("/update", methods=["POST"])
-@check_session_auth(authentication=True, authorization=True, permissions=["worker"])
+@check_session_auth(
+    authentication=True, authorization=True, permissions=["worker"]
+)
 def update():
     session_id = request.headers.get("SESSION-ID", None)
     user_id = auth.get_user_id(session_id)

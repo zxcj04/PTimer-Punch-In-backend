@@ -4,8 +4,8 @@ from uuid import uuid4
 
 from aclaaa import session
 
-from peons_check_in_backend.lib import user
 from peons_check_in_backend.db import auth
+from peons_check_in_backend.lib import user
 
 
 class AuthError(Exception):

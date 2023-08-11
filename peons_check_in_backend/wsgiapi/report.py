@@ -1,7 +1,7 @@
 from http import HTTPStatus
 
 from aclaaa.decorator import check_session_auth
-from flask import Blueprint, jsonify, request, Response
+from flask import Blueprint, Response, jsonify, request
 
 from peons_check_in_backend.lib import report
 
@@ -19,7 +19,16 @@ def all():
         end = request.args.get("end", None)
 
         result = report.generate_csv_all_working_hour(start, end, users)
-        return Response(result, mimetype='text/csv', headers={"Content-Disposition":"attachment;filename=report.csv"}), HTTPStatus.OK
+        return (
+            Response(
+                result,
+                mimetype="text/csv",
+                headers={
+                    "Content-Disposition": "attachment;filename=report.csv"
+                },
+            ),
+            HTTPStatus.OK,
+        )
     except Exception as e:
         ret = {
             "status": HTTPStatus.BAD_REQUEST,
@@ -39,7 +48,16 @@ def project():
         end = request.args.get("end", None)
 
         result = report.generate_csv_project_working_hour(start, end, project)
-        return Response(result, mimetype='text/csv', headers={"Content-Disposition":"attachment;filename=report.csv"}), HTTPStatus.OK
+        return (
+            Response(
+                result,
+                mimetype="text/csv",
+                headers={
+                    "Content-Disposition": "attachment;filename=report.csv"
+                },
+            ),
+            HTTPStatus.OK,
+        )
     except Exception as e:
         ret = {
             "status": HTTPStatus.BAD_REQUEST,
@@ -59,7 +77,16 @@ def user():
         end = request.args.get("end", None)
 
         result = report.generate_csv_user_working_hour(start, end, user)
-        return Response(result, mimetype='text/csv', headers={"Content-Disposition":"attachment;filename=report.csv"}), HTTPStatus.OK
+        return (
+            Response(
+                result,
+                mimetype="text/csv",
+                headers={
+                    "Content-Disposition": "attachment;filename=report.csv"
+                },
+            ),
+            HTTPStatus.OK,
+        )
     except Exception as e:
         ret = {
             "status": HTTPStatus.BAD_REQUEST,

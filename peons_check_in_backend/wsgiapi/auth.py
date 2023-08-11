@@ -89,7 +89,9 @@ def login():
 
 
 @auth_api.route("/check_session", methods=["POST"])
-@check_session_auth(authentication=True, authorization=True, permissions=["worker"])
+@check_session_auth(
+    authentication=True, authorization=True, permissions=["worker"]
+)
 def check_session():
     ret = {
         "status": HTTPStatus.OK,
@@ -99,7 +101,9 @@ def check_session():
 
 
 @auth_api.route("/check_admin", methods=["POST"])
-@check_session_auth(authentication=True, authorization=True, permissions=["admin"])
+@check_session_auth(
+    authentication=True, authorization=True, permissions=["admin"]
+)
 def check_admin():
     ret = {
         "status": HTTPStatus.OK,
@@ -109,7 +113,9 @@ def check_admin():
 
 
 @auth_api.route("/logout", methods=["POST"])
-@check_session_auth(authentication=True, authorization=True, permissions=["worker"])
+@check_session_auth(
+    authentication=True, authorization=True, permissions=["worker"]
+)
 def logout():
     session_id = request.headers.get("SESSION-ID")
     auth.logout(session_id)
@@ -151,7 +157,9 @@ def change_password():
 
 
 @auth_api.route("/administer", methods=["POST"])
-@check_session_auth(authentication=True, authorization=True, permissions=["admin"])
+@check_session_auth(
+    authentication=True, authorization=True, permissions=["admin"]
+)
 def administer():
     data = request.get_json()
     if data is None:
@@ -179,7 +187,9 @@ def administer():
 
 
 @auth_api.route("/revoke_admin", methods=["POST"])
-@check_session_auth(authentication=True, authorization=True, permissions=["admin"])
+@check_session_auth(
+    authentication=True, authorization=True, permissions=["admin"]
+)
 def revoke_admin():
     data = request.get_json()
     if data is None:

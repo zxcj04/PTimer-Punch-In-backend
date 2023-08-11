@@ -50,7 +50,9 @@ def recover(project_id):
 def virtual_delete(project_id):
     with MongoSession() as session:
         col = session.getCollection(COLLECTION_NAME)
-        col.update_one({"project_id": project_id}, {"$set": {"is_delete": True}})
+        col.update_one(
+            {"project_id": project_id}, {"$set": {"is_delete": True}}
+        )
 
 
 def delete(project_id):

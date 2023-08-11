@@ -55,7 +55,9 @@ def punch_out(user_id):
 def calc_working_hour(records, start=None, end=None):
     for record in records:
         if "project_id" in record:
-            record["project_name"] = project.get_project(record["project_id"]).get("project_name", "")
+            record["project_name"] = project.get_project(
+                record["project_id"]
+            ).get("project_name", "")
         if "punch_out_time" in record:
             punch_in_time = record["punch_in_time"]
             punch_out_time = record["punch_out_time"]
@@ -64,25 +66,33 @@ def calc_working_hour(records, start=None, end=None):
             if end and punch_out_time > end:
                 punch_out_time = end
             record["working_timer"] = punch_out_time - punch_in_time
-            record["working_timer"] = int(record["working_timer"].total_seconds())
+            record["working_timer"] = int(
+                record["working_timer"].total_seconds()
+            )
     return records
 
 
 def get_user_punch_list(user_id, start=None, end=None):
-    start = datetime.strptime(start, r"%Y-%m-%dT%H:%M:%S.%fZ") if start else None
+    start = (
+        datetime.strptime(start, r"%Y-%m-%dT%H:%M:%S.%fZ") if start else None
+    )
     end = datetime.strptime(end, r"%Y-%m-%dT%H:%M:%S.%fZ") if end else None
     records = punch.get_user_punch_list(user_id, start, end)
     if len(records) == 0:
         return []
     if not start and not end:
         records[0]["editable"] = True
-    records = [record for record in records if record.get("is_delete", False) is False]
+    records = [
+        record for record in records if record.get("is_delete", False) is False
+    ]
     records = calc_working_hour(records, start, end)
     return records
 
 
 def get_all_punch(user_id=None, start=None, end=None):
-    start = datetime.strptime(start, r"%Y-%m-%dT%H:%M:%S.%fZ") if start else None
+    start = (
+        datetime.strptime(start, r"%Y-%m-%dT%H:%M:%S.%fZ") if start else None
+    )
     end = datetime.strptime(end, r"%Y-%m-%dT%H:%M:%S.%fZ") if end else None
     records = punch.get_user_punch_list(user_id, start, end)
     records = calc_working_hour(records, start, end)
@@ -104,12 +114,18 @@ def create_punch(new_record):
 
     punch_id = str(uuid4())
     record_time = datetime.now(timezone.utc)
-    punch_in_time = datetime.strptime(new_record.get("punch_in_time", None), r"%Y-%m-%dT%H:%M:%S.%fZ")
-    punch_out_time = datetime.strptime(new_record.get("punch_out_time", None), r"%Y-%m-%dT%H:%M:%S.%fZ")
+    punch_in_time = datetime.strptime(
+        new_record.get("punch_in_time", None), r"%Y-%m-%dT%H:%M:%S.%fZ"
+    )
+    punch_out_time = datetime.strptime(
+        new_record.get("punch_out_time", None), r"%Y-%m-%dT%H:%M:%S.%fZ"
+    )
     project_id = new_record.get("project_id", None)
 
     if punch_in_time > punch_out_time:
-        raise PunchError("Punch in time should not be later than punch out time")
+        raise PunchError(
+            "Punch in time should not be later than punch out time"
+        )
 
     new_punch = {
         "punch_id": punch_id,
@@ -126,9 +142,13 @@ def create_punch(new_record):
 def update_punch(punch_id, new_record):
     new_punch = {}
     if new_record.get("punch_in_time", None):
-        new_punch["punch_in_time"] = datetime.strptime(new_record.get("punch_in_time", None), r"%Y-%m-%dT%H:%M:%S.%fZ")
+        new_punch["punch_in_time"] = datetime.strptime(
+            new_record.get("punch_in_time", None), r"%Y-%m-%dT%H:%M:%S.%fZ"
+        )
     if new_record.get("punch_out_time", None):
-        new_punch["punch_out_time"] = datetime.strptime(new_record.get("punch_out_time", None), r"%Y-%m-%dT%H:%M:%S.%fZ")
+        new_punch["punch_out_time"] = datetime.strptime(
+            new_record.get("punch_out_time", None), r"%Y-%m-%dT%H:%M:%S.%fZ"
+        )
     if new_record.get("project_id", None):
         new_punch["project_id"] = new_record.get("project_id", None)
     punch.update(punch_id, new_punch)

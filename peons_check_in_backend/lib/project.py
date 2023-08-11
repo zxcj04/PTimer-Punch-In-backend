@@ -10,7 +10,6 @@ class Project:
         self.project_owner = project_owner
         self.description = description
 
-
     def to_dict(self):
         return {
             "project_id": self.project_id,
@@ -18,7 +17,6 @@ class Project:
             "project_owner": self.project_owner,
             "description": self.description,
         }
-
 
     @staticmethod
     def available_infos():

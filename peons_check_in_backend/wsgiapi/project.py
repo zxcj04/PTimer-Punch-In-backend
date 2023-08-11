@@ -5,16 +5,19 @@ from flask import Blueprint, jsonify, request
 
 from peons_check_in_backend.lib import project, user
 
-
 project_api = Blueprint("project_api", __name__)
 
 
 @project_api.route("/info/<project_id>", methods=["GET"])
-@check_session_auth(authentication=True, authorization=True, permissions=["worker"])
+@check_session_auth(
+    authentication=True, authorization=True, permissions=["worker"]
+)
 def info(project_id: str):
     try:
         target = project.get_project(project_id)
-        target["project_owner_name"] = user.get_user_name(target.get("project_owner", None))
+        target["project_owner_name"] = user.get_user_name(
+            target.get("project_owner", None)
+        )
     except project.ProjectError as e:
         ret = {
             "status": HTTPStatus.BAD_REQUEST,
@@ -30,7 +33,9 @@ def info(project_id: str):
 
 
 @project_api.route("/create", methods=["POST"])
-@check_session_auth(authentication=True, authorization=True, permissions=["admin"])
+@check_session_auth(
+    authentication=True, authorization=True, permissions=["admin"]
+)
 def create():
     try:
         project_name = request.json["project_name"]
@@ -59,7 +64,9 @@ def create():
 
 
 @project_api.route("/exist/<project_id>", methods=["GET"])
-@check_session_auth(authentication=True, authorization=True, permissions=["worker"])
+@check_session_auth(
+    authentication=True, authorization=True, permissions=["worker"]
+)
 def exist(project_id: str):
     try:
         ret = project.exist(project_id)
@@ -78,12 +85,16 @@ def exist(project_id: str):
 
 
 @project_api.route("/list", methods=["GET"])
-@check_session_auth(authentication=True, authorization=True, permissions=["worker"])
+@check_session_auth(
+    authentication=True, authorization=True, permissions=["worker"]
+)
 def list():
     try:
         ret = project.list_project()
         for i in ret:
-            i["project_owner_name"] = user.get_user_name(i.get("project_owner", None))
+            i["project_owner_name"] = user.get_user_name(
+                i.get("project_owner", None)
+            )
     except project.ProjectError as e:
         ret = {
             "status": HTTPStatus.BAD_REQUEST,
@@ -99,7 +110,9 @@ def list():
 
 
 @project_api.route("/update", methods=["POST"])
-@check_session_auth(authentication=True, authorization=True, permissions=["admin"])
+@check_session_auth(
+    authentication=True, authorization=True, permissions=["admin"]
+)
 def update():
     try:
         project_id = request.json["project_id"]
@@ -154,7 +167,9 @@ def recover_project():
 
 
 @project_api.route("/delete", methods=["POST"])
-@check_session_auth(authentication=True, authorization=True, permissions=["admin"])
+@check_session_auth(
+    authentication=True, authorization=True, permissions=["admin"]
+)
 def delete():
     data = request.get_json()
     project_id = data.get("project_id", None)

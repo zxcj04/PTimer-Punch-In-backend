@@ -60,7 +60,10 @@ def exist(punch_id):
 def update(record_id, new_record):
     with MongoSession() as session:
         col = session.getCollection(COLLECTION_NAME)
-        col.update_one({"punch_id": record_id, "is_delete": {"$ne": True}}, {"$set": new_record})
+        col.update_one(
+            {"punch_id": record_id, "is_delete": {"$ne": True}},
+            {"$set": new_record},
+        )
 
 
 def update_punch_out_time(record_id, punch_out_time):
@@ -75,17 +78,13 @@ def update_punch_out_time(record_id, punch_out_time):
 def recover(record_id):
     with MongoSession() as session:
         col = session.getCollection(COLLECTION_NAME)
-        col.update_one(
-            {"punch_id": record_id}, {"$unset": {"is_delete": ""}}
-        )
+        col.update_one({"punch_id": record_id}, {"$unset": {"is_delete": ""}})
 
 
 def virtual_delete(punch_id):
     with MongoSession() as session:
         col = session.getCollection(COLLECTION_NAME)
-        col.update_one(
-            {"punch_id": punch_id}, {"$set": {"is_delete": True}}
-        )
+        col.update_one({"punch_id": punch_id}, {"$set": {"is_delete": True}})
 
 
 def delete(punch_id):

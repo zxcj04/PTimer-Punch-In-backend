@@ -1,5 +1,5 @@
 from peons_check_in_backend.db import user
-from peons_check_in_backend.lib import project, auth
+from peons_check_in_backend.lib import auth, project
 
 
 class UserError(Exception):
@@ -34,11 +34,9 @@ class User:
                 del ret[k]
         return ret
 
-
     @staticmethod
     def available_infos():
         return ["name", "telephone", "telegram"]
-
 
     @staticmethod
     def available_infos_admin():

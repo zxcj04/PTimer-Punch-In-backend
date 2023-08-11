@@ -51,7 +51,9 @@ def update(account, new_account):
 def update_password(mail, new_password):
     with MongoSession() as session:
         col = session.getCollection(COLLECTION_NAME)
-        col.update_one({"mail": mail}, {"$set": {"hashed_password": new_password}})
+        col.update_one(
+            {"mail": mail}, {"$set": {"hashed_password": new_password}}
+        )
 
 
 def virtual_delete(mail):

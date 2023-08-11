@@ -35,8 +35,12 @@ def calc_project_working_hour(start, end, project_id):
 
     records += punch_lib.get_all_punch(start=start, end=end)
 
-    records = [record for record in records if record.get("is_delete", False) == False]
-    records = [record for record in records if record.get("project_id") == project_id]
+    records = [
+        record for record in records if record.get("is_delete", False) == False
+    ]
+    records = [
+        record for record in records if record.get("project_id") == project_id
+    ]
 
     data = {
         "users": {},
@@ -68,16 +72,22 @@ def calc_user_working_hour(start, end, user_id):
         user_name = user_lib.get_user_name(user_id)
         project_name = record.get("project_name", "")
         working_timer = record.get("working_timer", 0)
-        start_time = record.get("punch_in_time", None).strftime(r"%Y-%m-%dT%H:%M:%S.%fZ")
-        end_time = record.get("punch_out_time", None).strftime(r"%Y-%m-%dT%H:%M:%S.%fZ")
+        start_time = record.get("punch_in_time", None).strftime(
+            r"%Y-%m-%dT%H:%M:%S.%fZ"
+        )
+        end_time = record.get("punch_out_time", None).strftime(
+            r"%Y-%m-%dT%H:%M:%S.%fZ"
+        )
 
-        data["punchs"].append({
-            "user_name": user_name,
-            "project_name": project_name,
-            "working_timer": working_timer,
-            "start_time": start_time,
-            "end_time": end_time,
-        })
+        data["punchs"].append(
+            {
+                "user_name": user_name,
+                "project_name": project_name,
+                "working_timer": working_timer,
+                "start_time": start_time,
+                "end_time": end_time,
+            }
+        )
 
     return data
 
@@ -107,7 +117,9 @@ def generate_csv_all_working_hour(start, end, users=[]):
         user_telegram = user.get("telegram")
 
         working_hour = round(working_timer / 3600, 2)
-        d["rows"].append([user_name, user_mail, user_phone, user_telegram, working_hour])
+        d["rows"].append(
+            [user_name, user_mail, user_phone, user_telegram, working_hour]
+        )
 
     d["rows"].append(["total", "", "", "", round(data["total"] / 3600, 2)])
 
@@ -130,7 +142,9 @@ def generate_csv_project_working_hour(start, end, project_id):
         user_phone = user.get("telephone")
         user_telegram = user.get("telegram")
         working_hour = round(working_timer / 3600, 2)
-        d["rows"].append([user_name, user_mail, user_phone, user_telegram, working_hour])
+        d["rows"].append(
+            [user_name, user_mail, user_phone, user_telegram, working_hour]
+        )
 
     d["rows"].append(["total", "", "", "", round(data["total"] / 3600, 2)])
 
@@ -153,6 +167,8 @@ def generate_csv_user_working_hour(start, end, user_id):
         working_hour = round(punch["working_timer"] / 3600, 2)
         start_time = punch["start_time"]
         end_time = punch["end_time"]
-        d["rows"].append([user_name, project_name, working_hour, start_time, end_time])
+        d["rows"].append(
+            [user_name, project_name, working_hour, start_time, end_time]
+        )
 
     return generate_csv(d)
