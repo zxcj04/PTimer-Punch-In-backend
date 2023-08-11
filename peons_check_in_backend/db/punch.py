@@ -19,9 +19,9 @@ def get(punch_id):
 def get_user_punch_list(user_id, start=None, end=None, limit=0):
     with MongoSession() as session:
         col = session.getCollection(COLLECTION_NAME)
-        findFilter = {
-            "user_id": user_id,
-        }
+        findFilter = {}
+        if user_id:
+            findFilter["user_id"] = user_id
         if start and end:
             findFilter["$or"] = [
                 {
@@ -42,34 +42,6 @@ def get_user_punch_list(user_id, start=None, end=None, limit=0):
             {"_id": 0},
             [("record_time", -1)],
             limit=limit,
-        )
-        records = list(records)
-        return records
-
-
-def get_all_punch(user_id=None, start=None, end=None, limit=0):
-    with MongoSession() as session:
-        col = session.getCollection(COLLECTION_NAME)
-        findFilter = {}
-        if user_id:
-            findFilter["user_id"] = user_id
-        if start and end:
-            findFilter["$or"] = [
-                {
-                    "punch_in_time": {
-                        "$gte": start,
-                        "$lte": end,
-                    }
-                },
-                {
-                    "punch_out_time": {
-                        "$gte": start,
-                        "$lte": end,
-                    }
-                },
-            ]
-        records = col.find(
-            findFilter, {"_id": 0}, [("record_time", -1)], limit=limit
         )
         records = list(records)
         return records

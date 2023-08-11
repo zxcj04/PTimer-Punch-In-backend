@@ -4,6 +4,7 @@ from .auth import auth_api
 from .punch import punch_api
 from .user import user_api
 from .project import project_api
+from .report import report_api
 
 # (<url-prefix>, <api-blueprint>)
 WSGI_APIS = [
@@ -11,6 +12,7 @@ WSGI_APIS = [
     ("/punch", punch_api),
     ("/user", user_api),
     ("/project", project_api),
+    ("/report", report_api),
 ]
 
 
